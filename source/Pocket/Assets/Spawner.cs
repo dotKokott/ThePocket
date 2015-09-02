@@ -27,6 +27,7 @@ public class Spawner : MonoBehaviour {
     private float newY = 0;
 
     private int howManyDied = 0;
+    private bool canPlay = true; // To prevent multiple plays, if this doesn't work then fuck Unity man
 
     // Use this for initialization
     IEnumerator Start() {
@@ -45,7 +46,7 @@ public class Spawner : MonoBehaviour {
         Rigid = CurrentObject.GetComponent<Rigidbody2D>();
         Rigid.isKinematic = true;
         CurrentObject.transform.parent = Hand.transform;
-
+        canPlay = true;
         iTween.MoveTo( Hand, iTween.Hash( "time", 2, "y", transform.position.y + 2, "easetype", iTween.EaseType.linear, "oncomplete", "OnCompleteHand", "oncompletetarget", gameObject ) );
     }
 
@@ -55,8 +56,9 @@ public class Spawner : MonoBehaviour {
 
         iTween.MoveTo( Hand, iTween.Hash( "time", 1, "y", 22, "easetype", iTween.EaseType.linear, "oncomplete", "OnCompleteHand", "oncompletetarget", gameObject ) );
         var audio = CurrentObject.GetComponent<AudioSource>();
-        if ( audio != null ) {
-            audio.Play();
+        if ( audio != null && canPlay ) {
+            canPlay = false;
+            audio.PlayOneShot( audio.clip );
         }
     }
 
@@ -80,7 +82,7 @@ public class Spawner : MonoBehaviour {
 
         var distanceToHigh = transform.position.y - highestOfHigh;
 
-        Debug.Log( distanceToHigh - distance );
+        //Debug.Log( distanceToHigh - distance );
 
         if ( Mathf.Abs( distanceToHigh - distance ) < 8 || Mathf.Abs( distanceToHigh - distance ) > 15 ) {
             if ( !doTheLerp ) {
