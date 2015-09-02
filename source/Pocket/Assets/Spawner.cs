@@ -27,8 +27,10 @@ public class Spawner : MonoBehaviour {
     private int howManyDied = 0;
 
 	// Use this for initialization
-	void Start () {
+	IEnumerator Start () {
         //distance = Mathf.Abs(GameObject.Find("plank").transform.position.y - gameObject.transform.position.y) / 2;
+        yield return new WaitForSeconds( 3 );
+
         distance = 2;
         Spawn();
 	}
